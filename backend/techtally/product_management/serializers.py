@@ -4,26 +4,26 @@ from product_management.models import Brand, Category, SubCategory, Product
 class BrandSerializer(serializers.ModelSerializer):
 
     class Meta:
-        brand = Brand
+        model = Brand
         fields = '__all__'
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        category = Category
+        model = Category
         fields = '__all__'
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        sub_category = SubCategory
+        model = SubCategory
         fields = '__all__'
 
         
 class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
-        product = Product
+        model = Product
         fields = '__all__'

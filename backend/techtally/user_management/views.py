@@ -1,8 +1,9 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets, status
 from rest_framework.response import Response
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from user_management.models import Address, Customer, ProfileUser, Vendor
-from user_management.serializers import AddressSerializer, CustomerSerializer, ProfileUserSerializer, VendorSerializer
+from user_management.serializers import AddressSerializer, CustomerSerializer, ProfileUserSerializer, VendorSerializer, UserSerializer
 
 class AddressViewSet(viewsets.ModelViewSet):
 
@@ -116,11 +117,41 @@ class ProfileUserViewSet(viewsets.ModelViewSet):
 
         # @action(detail=False, methods=['post'])
         def create(self, request):
-            # Functionality for creating a new object
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=201)
+            try:
+                # Functionality for creating a new object
+                address_data = request.data.get('address', {})
+                user_data = request.data.get('user', {})
+                profile_user_data = request.data.get('profile_user', {})
+                
+                # Serialize 'address' data
+                address_serializer = AddressSerializer(data=address_data)
+                address_serializer.is_valid(raise_exception=True)
+
+                # Hash the user password before saving
+                user_data['password'] = make_password(user_data.get('password'))
+
+                # Serialize 'user' data
+                user_serializer = UserSerializer(data=user_data)
+                user_serializer.is_valid(raise_exception=True)
+
+                # Serialize 'profile_user' data
+                profile_user_serializer = ProfileUserSerializer(data=profile_user_data)
+
+                # Save 'address', 'user' and 'profile_user'
+                address = address_serializer.save()
+                user = user_serializer.save()
+                profile_user_data['user'] = user.id  # Link profile_user to the created user
+                profile_user_data['addresses'] = [address.id]
+                profile_user_serializer.is_valid(raise_exception=True)
+                profile_user_serializer.save()
+
+                # Return response
+                headers = self.get_success_headers(user_serializer.data)
+                return Response(user_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            except:
+                # Handle exceptions (customize this section based on your needs)
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         
         # @action(detail=True, methods=['get'])
         def retrieve(self, request, pk=None):

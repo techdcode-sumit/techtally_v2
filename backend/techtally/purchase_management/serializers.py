@@ -4,19 +4,19 @@ from purchase_management.models import Purchase, PurchaseProduct, Inventory
 class PurchaseSerializer(serializers.ModelSerializer):
 
     class Meta:
-        purchase = Purchase
+        model = Purchase
         fields = '__all__'
 
 
 class PurchaseProductSerializer(serializers.ModelSerializer):
 
     class Meta:
-        purchase_roduct = PurchaseProduct
+        model = PurchaseProduct
         fields = '__all__'
 
 
 class InventorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        inventory = Inventory
+        model = Inventory
         fields = '__all__'
