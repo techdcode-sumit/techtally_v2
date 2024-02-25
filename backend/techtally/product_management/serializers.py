@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from product_management.models import Brand, Category, SubCategory, Product
+from product_management.models import Brand, Category, SubCategory, Product, ProductImage
 
 class BrandSerializer(serializers.ModelSerializer):
 
@@ -21,8 +21,16 @@ class SubCategorySerializer(serializers.ModelSerializer):
         model = SubCategory
         fields = '__all__'
 
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
+
         
 class ProductSerializer(serializers.ModelSerializer):
+
+    images = ProductImageSerializer(many=True, required=False)
 
     class Meta:
         model = Product

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .history/
+backend/techtally/uploads/
 
 # C extensions
 *.so

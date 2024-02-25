@@ -10,7 +10,6 @@ class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
 
-    # @action(detail=False, methods=['get'])
     def list(self, request):
         # Functionality for listing all objects
         queryset = self.get_queryset()
