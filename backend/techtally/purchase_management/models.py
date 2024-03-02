@@ -10,11 +10,17 @@ class Purchase(models.Model):
     invoice_date = models.DateTimeField()
     purchase_order_no = models.CharField(max_length=80, null=True, blank=True)
     place_of_supply = models.CharField(max_length=80, null=True, blank=True)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_purchases')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_purchases')
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name
@@ -28,12 +34,18 @@ class PurchaseProduct(models.Model):
     rate = models.CharField(max_length=80)
     cgst = models.CharField(max_length=80)
     sgst = models.CharField(max_length=80)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_purchase_products')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_purchase_products')
     updated_at = models.DateTimeField(default=timezone.now)
 
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
+        
     def __str__(self):
         return self.name
 
@@ -46,11 +58,17 @@ class Inventory(models.Model):
     rate = models.CharField(max_length=80)
     cgst = models.CharField(max_length=80)
     sgst = models.CharField(max_length=80)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_inventories')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_inventories')
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name

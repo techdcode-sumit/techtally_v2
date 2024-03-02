@@ -11,11 +11,17 @@ class Address(models.Model):
     state = models.CharField(max_length=80)
     country = models.CharField(max_length=80)
     postal_code = models.CharField(max_length=80)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_addresses')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_addresses')
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name
@@ -26,11 +32,17 @@ class Customer(models.Model):
     email_id = models.EmailField(null=True, blank=True)
     mob_no = models.CharField(max_length=50, null=True, blank=True)
     gst_no = models.CharField(max_length=20, null=True, blank=True)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_customers')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_customers')
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name
@@ -40,9 +52,15 @@ class ProfileUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     addresses = models.ManyToManyField(Address)
     mob_no = models.CharField(max_length=50, null=True, blank=True)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
     
     def __str__(self):
         return self.user.username
@@ -54,11 +72,17 @@ class Vendor(models.Model):
     email_id = models.EmailField(null=True, blank=True)
     mob_no = models.CharField(max_length=50, null=True, blank=True)
     gst_no = models.CharField(max_length=20, null=True, blank=True)
-    is_deleted = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_vendors')
     created_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='updated_vendors')
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def soft_delete(self):
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
     
     def __str__(self):
         return self.name

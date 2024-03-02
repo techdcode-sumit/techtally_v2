@@ -71,6 +71,7 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     sub_category =models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    variant = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField()
     images = models.ManyToManyField(ProductImage, blank=True)
     code = models.CharField(max_length=20)
